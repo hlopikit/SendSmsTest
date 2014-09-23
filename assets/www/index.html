@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset='windows-1251'/>
+		<meta name="format-detection" content="telephone=no" />
+        <meta name="msapplication-tap-highlight" content="no" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, target-densitydpi=medium-dpi, user-scalable=0" />
+		<title>Cordova</title>
+		<script type="text/javascript" src="cordova.js"></script>
+		<script type="text/javascript" src="smsplugin.js"></script>
+		<script type="text/javascript">
+			var _loaded = false;
+			var _ready = false;
+			
+			function onLoadFunction() {
+				_loaded = true;
+				if (_ready) start();
+			}
+			
+			document.addEventListener('deviceready', function() {
+				_ready = true;
+				if (_loaded) start();
+			});
+			
+			function start() {
+				var btn = document.getElementById("sendSMS");
+				btn.onclick = function() {
+					var number = document.getElementById("phone").value;
+					var message = document.getElementById("msg").value;
+					
+					if (number == "") {
+						alert("Телефон пуст");
+						return;
+					}
+					
+					if (message == "") {
+						alert("Сообщение пустое");
+						return;
+					}
+					
+					SmsPlugin.prototype.send(number, message, '',
+					    function () { 
+					       alert('Отправлено'); 
+					       document.getElementById("phone").value = ""; 
+					       document.getElementById("msg").value = "";
+					    },
+					    function (e) {
+					        alert('Ошибка:' + e);
+					    }
+					); 
+				};
+			}
+		</script>
+	</head>
+	<body onload="onLoadFunction()">
+		<form>
+			Телефон: <input type="text" id="phone"></br>
+			Сообщение: <input type="text" id="msg">
+		</form>
+		<button id="sendSMS">Отправить SMS</button>
+	</body>
+</html>
